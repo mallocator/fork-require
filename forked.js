@@ -9,6 +9,9 @@ try {
     process.on('message', async message => {
         try {
             if (message.prop) {
+                if (!forkedModule[message.prop]) {
+                    return process.send({error: 'TypeError: ' + message.prop + ' is not a function', stack: ''})
+                }
                 let response = await forkedModule[message.prop](...message.args);
                 process.send({response});
             } else {

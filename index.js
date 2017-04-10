@@ -1,5 +1,5 @@
-const path = require('path');
 const cp = require('child_process');
+const path = require('path');
 const util = require('util');
 
 function getProcessArgs() {
@@ -26,6 +26,12 @@ function handleResponse(process, resolve, reject, source)  {
 }
 
 function fixStack(stack, source) {
+    if (!stack) {
+        return;
+    }
+    if (!source) {
+        return stack;
+    }
     let myStack = source.stack;
     let tail = myStack.substr(myStack.indexOf('\n', myStack.indexOf('\n') + 1));
     let head = stack.substr(0, stack.substr(0, stack.indexOf('forked.js')).lastIndexOf('\n'));
@@ -48,7 +54,7 @@ module.exports = (file, options = {
     let filePath = path.isAbsolute(file) ? file : path.join(calleePath, file);
     options.args.unshift(filePath, options.title || 'fork-require.js file ' + filePath);
 
-    let child = cp.fork('./forked.js', options.args , {
+    let child = cp.fork(path.join(__dirname, 'forked.js'), options.args , {
         env: options.env,
         cwd: options.cwd,
         execArgv: options.execArgv,
@@ -63,7 +69,7 @@ module.exports = (file, options = {
         }
     });
 
-    return new Proxy(() => {}, {
+    let proxy = new Proxy(() => { this.process = process }, {
         apply: (_, __, args) => {
             let source = new Error();
             return new Promise((resolve, reject) => {
@@ -71,7 +77,10 @@ module.exports = (file, options = {
                 child.send({args});
             });
         },
-        get: (_, prop) => {
+        get: (obj, prop) => {
+            if (obj[prop]) {
+                return obj[prop];
+            }
             let source = new Error();
             return function (...args) {
                 return new Promise((resolve, reject) => {
@@ -81,4 +90,6 @@ module.exports = (file, options = {
             }
         }
     });
+    proxy._childProcess = child;
+    return proxy;
 };
