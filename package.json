@@ -1,0 +1,41 @@
+{
+  "name": "fork-require",
+  "version": "1.0.0",
+  "description": "Allows to \"require\" a file, while forking it into a child process.",
+  "author": "Ravi Gairola <mallox@pyxzl.net>",
+  "homepage": "https://github.com/mallocator/fork-require",
+  "license": "Apache-2.0",
+  "main": "index.js",
+  "keywords": [
+    "fork",
+    "spawn",
+    "child",
+    "process",
+    "cp",
+    "require",
+    "include"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mallocator/fork-require.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mallocator/fork-require/issues",
+    "email": "mallox@pyxzl.net"
+  },
+  "devDependencies": {
+    "chai": "^3",
+    "coveralls": "^2",
+    "gently": "^0.10",
+    "istanbul": "^0.4",
+    "mocha": "^3",
+    "mocha-lcov-reporter": "^1"
+  },
+  "engine": {
+    "node": ">=6.4"
+  },
+  "scripts": {
+    "test": "istanbul cover _mocha -- --recursive",
+    "test-travis": "istanbul cover _mocha --report lcovonly -- -R spec --recursive"
+  }
+}
