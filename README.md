@@ -50,7 +50,7 @@ npm i --save fork-require
 
 ## API
 
-There's only on method call available: 
+There's only one method call available: 
 
 ### fork( file, \[options\] )
 
