@@ -35,7 +35,7 @@ function fixStack(stack, source) {
 module.exports = (file, options = {
     args: getProcessArgs(),
     env: process.env,
-    cwd: process.cwd,
+    cwd: process.cwd(),
     execArgv: process.execArgv,
     execPath: process.execPath,
     fixStack: true
