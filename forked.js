@@ -25,3 +25,7 @@ try {
 } catch (err) {
     process.send({error: err.message, stack: err.stack, failed: true});
 }
+
+// Watch parent exit when it dies
+process.stdout.resume();
+process.stdout.on('end', () => process.exit());
