@@ -2,6 +2,9 @@ const cp = require('child_process');
 const path = require('path');
 const util = require('util');
 
+
+let children = [];
+
 function getProcessArgs() {
     let args = process.argv.slice();
     args.splice(0, 2);
@@ -91,5 +94,8 @@ module.exports = (file, options = {
         }
     });
     proxy._childProcess = child;
+    children.push(child);
     return proxy;
 };
+
+process.on('exit', () => children.forEach(child => child.kill()));
