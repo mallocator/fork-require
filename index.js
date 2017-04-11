@@ -5,6 +5,11 @@ const util = require('util');
 
 let children = [];
 
+/**
+ * Returns the client arguments that should be passed on to the child process
+ * (by removing automatic values form the start).
+ * @returns {Array.<*>}
+ */
 function getProcessArgs() {
     let args = process.argv.slice();
     args.splice(0, 2);
@@ -56,17 +61,29 @@ function fixStack(stack, source) {
     return head + tail;
 }
 
+/**
+ * Will try up to 3 times to send a message to the given process.
+ * @param {ChildProcess} process    The process to send the message to
+ * @param {object} message          The message to send
+ * @param {number} [retries=0]      Automatically set when retrying
+ */
 function send(process, message, retries = 0) {
     try {
         process.send(message)
     } catch (err) {
         if (retries < 3) {
-            return setImmediate(() => send(process, message, retries++));
+            return setImmediate(() => send(process, message, ++retries));
         }
         throw err;
     }
 }
 
+/**
+ * The "fork" function that is made available externally. This is the only API entry point so far.
+ * @param {string} file         The relative or absolute file path to load.
+ * @param {object} [options]    A set of options that will determine how the child process is forked.
+ * @returns {Proxy<Module>}     The proxy module that will forward all calls to the child process module
+ */
 module.exports = (file, options = {
     args: getProcessArgs(),
     env: process.env,

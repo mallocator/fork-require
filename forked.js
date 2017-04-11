@@ -9,7 +9,7 @@ function send(message, retries = 0) {
         process.send(message)
     } catch (err) {
         if (retries < 3) {
-            return setImmediate(() => send(message, retries++));
+            return setImmediate(() => send(message, ++retries));
         }
         throw err;
     }
