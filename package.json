@@ -1,6 +1,6 @@
 {
   "name": "fork-require",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Allows to \"require\" a file, while forking it into a child process.",
   "author": "Ravi Gairola <mallox@pyxzl.net>",
   "homepage": "https://github.com/mallocator/fork-require",
