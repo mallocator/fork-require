@@ -11,6 +11,13 @@ function getProcessArgs() {
     return args;
 }
 
+/**
+ * Handles the response of a child and calls the right promise resolution if given
+ * @param {ChildProcess} process    The child process on which to listen for the message
+ * @param {function} [resolve]      The promise resolve function to call on success
+ * @param {function} [reject]       The promise reject function to on failure
+ * @param {Error} [source]          An error object that has the stack needed to fix the process stack
+ */
 function handleResponse(process, resolve, reject, source)  {
     process.once('message', message => {
         if (message.error && !message.failed) {
@@ -28,6 +35,14 @@ function handleResponse(process, resolve, reject, source)  {
     });
 }
 
+/**
+ * Cleans up the stack that was thrown from the internal process. Instead it will simply replace the part
+ * of the stack that was caught in the process and replace it with the part of the stack that was called
+ * in the parent function.
+ * @param {string} stack
+ * @param {string} source
+ * @returns {string}
+ */
 function fixStack(stack, source) {
     if (!stack) {
         return;
@@ -39,6 +54,17 @@ function fixStack(stack, source) {
     let tail = myStack.substr(myStack.indexOf('\n', myStack.indexOf('\n') + 1));
     let head = stack.substr(0, stack.substr(0, stack.indexOf('forked.js')).lastIndexOf('\n'));
     return head + tail;
+}
+
+function send(process, message, retries = 0) {
+    try {
+        process.send(message)
+    } catch (err) {
+        if (retries < 3) {
+            return setImmediate(() => send(process, message, retries++));
+        }
+        throw err;
+    }
 }
 
 module.exports = (file, options = {
@@ -77,7 +103,7 @@ module.exports = (file, options = {
             let source = new Error();
             return new Promise((resolve, reject) => {
                 handleResponse(child, resolve, reject, options.fixStack && source);
-                child.send({args});
+                send(child, {args});
             });
         },
         get: (obj, prop) => {
@@ -88,7 +114,7 @@ module.exports = (file, options = {
             return function (...args) {
                 return new Promise((resolve, reject) => {
                     handleResponse(child, resolve, reject, options.fixStack && source);
-                    child.send({prop, args});
+                    send(child, {prop, args});
                 })
             }
         }
