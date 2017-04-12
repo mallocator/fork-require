@@ -38,4 +38,4 @@ try {
 }
 
 // Watch parent exit when it dies
-process.stdout.on('disconnect', () => process.exit());
+process.on('disconnect', () => process.exit());
