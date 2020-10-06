@@ -5,6 +5,7 @@ Allows to "require" a file, while forking it into a child process.
 [![Build Status](https://travis-ci.org/mallocator/fork-require.svg?branch=master)](https://travis-ci.org/mallocator/fork-require)
 [![Coverage Status](https://coveralls.io/repos/mallocator/fork-require/badge.svg?branch=master&service=github)](https://coveralls.io/github/mallocator/fork-require?branch=master)
 [![Dependency Status](https://david-dm.org/mallocator/fork-require.svg)](https://david-dm.org/mallocator/fork-require)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fmallocator%2Ffork-require.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fmallocator%2Ffork-require?ref=badge_shield)
 
 
 ## About
@@ -90,3 +91,7 @@ I try to find all the bugs and have tests to cover all cases, but since I'm work
 Also I'm trying to think of new features to implement, but most of the time I add new features because someone asked me for it.
 So please report any bugs or feature request to mallox@pyxzl.net or file an issue directly on [Github](https://github.com/mallocator/fork-require/issues).
 Thanks!
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fmallocator%2Ffork-require.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fmallocator%2Ffork-require?ref=badge_large)
